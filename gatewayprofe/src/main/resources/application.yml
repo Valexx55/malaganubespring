@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: servidor-gateway
+  cloud: 
+   gateway:
+     default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+     globalcors:
+        corsConfigurations:
+          '[/**]':
+              allowedOrigins: "*"
+              allowedMethods: "*"
+              allowedHeaders: "*"
+     routes:
+      - id: msrestaurantes 
+        uri: lb://msrestaurantes
+        predicates:
+          - Path=/api/restaurante/**
+        filters:
+          - RewritePath=/api/restaurante/*, /restaurante/
+server:
+  port: 8090
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka 

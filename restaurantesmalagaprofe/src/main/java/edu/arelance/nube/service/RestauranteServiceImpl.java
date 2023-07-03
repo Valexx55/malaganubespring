@@ -86,6 +86,13 @@ public class RestauranteServiceImpl implements RestauranteService{
 		return listaRest;
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Iterable<String> obtenerTodosLosBarrios() {
+		return this.restauranteRepository.consultarTodosLosBarrios();
+		
+	}
+
 }
 
 
