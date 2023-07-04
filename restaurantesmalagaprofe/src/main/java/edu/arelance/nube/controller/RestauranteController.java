@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.arelance.nube.dto.FraseChuckNorris;
 import edu.arelance.nube.repository.entity.Restaurante;
 import edu.arelance.nube.service.RestauranteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -154,9 +155,7 @@ public class RestauranteController {
 	
 	//* PUT -> Modificar un restaurante que ya existe http://localhost:8081/restaurante/id (Body Restaurante)
 	@PutMapping("/{id}")
-	public ResponseEntity<?> modificarRestaurante (
-			@Valid @RequestBody Restaurante restaurante, 
-			@PathVariable Long id, BindingResult bindingResult)
+	public ResponseEntity<?> modificarRestaurante (@Valid @RequestBody Restaurante restaurante, BindingResult bindingResult, @PathVariable Long id)
 	{
 		ResponseEntity<?> responseEntity = null;
 		Optional<Restaurante> opRest = null;
@@ -237,6 +236,30 @@ public class RestauranteController {
 
         return responseEntity;
     }
+    
+    /**
+     * Obtener una frase aleatoria de Chuck Norris. 
+     * Metodo GET a http://localhost:8081/restaurante/fraseChuckNorris
+     * @return
+     */
+    @GetMapping("/fraseChuckNorris")
+	public ResponseEntity<?> obtieneFrase(){
+		ResponseEntity<?> responseEntity = null; 
+		Optional<FraseChuckNorris> opFrase = null;
+		
+			opFrase = this.restauranteService.obtenerFraseAleatorioChuckNorris();
+			if (opFrase.isPresent())
+			{
+				FraseChuckNorris frase = opFrase.get();
+				responseEntity = ResponseEntity.ok(frase);
+			} else {
+				responseEntity = ResponseEntity.noContent().build();
+			}
+			
+			
+		return responseEntity;
+		
+	}
 	
 }
 
