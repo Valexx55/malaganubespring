@@ -11,6 +11,8 @@ public interface RestauranteService {
 	
 	Page<Restaurante> consultarPorPagina (Pageable pageable);
 	
+	Iterable<Restaurante> buscarPorRangoPrecio(int preciomin, int preciomax, Pageable pageable);
+	
 	Iterable<Restaurante> consultarTodos ();
 	
 	Optional<Restaurante> consultarRestaurante (Long id);
@@ -29,7 +31,7 @@ public interface RestauranteService {
 	
 	Optional<FraseChuckNorris> obtenerFraseAleatorioChuckNorris ();
 	
-
+	
 	
 	
 	

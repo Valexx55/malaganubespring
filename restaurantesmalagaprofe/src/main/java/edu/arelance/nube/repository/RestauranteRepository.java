@@ -2,6 +2,8 @@ package edu.arelance.nube.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -17,6 +19,8 @@ public interface RestauranteRepository extends PagingAndSortingRepository<Restau
 	//obtener restaurantes en un rango de precio
 	
 	Iterable<Restaurante> findByPrecioBetween (int preciomin, int preciomax);
+	
+	Page<Restaurante> findByPrecioBetween (int preciomin, int preciomax, Pageable pageable);
 	
 	
 	//2 JPQL - HQL - Pseduo SQL pero de JAVA - "Agnóstico" x

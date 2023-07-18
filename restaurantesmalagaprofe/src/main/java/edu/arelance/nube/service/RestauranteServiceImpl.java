@@ -79,6 +79,16 @@ public class RestauranteServiceImpl implements RestauranteService{
 			
 		return listaR;
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Iterable<Restaurante> buscarPorRangoPrecio(int preciomin, int preciomax, Pageable pageable) {
+		Iterable<Restaurante> listaR = null;
+			
+			listaR = this.restauranteRepository.findByPrecioBetween(preciomin, preciomax, pageable);
+			
+		return listaR;
+	}
 
 	@Override
 	@Transactional(readOnly = true)

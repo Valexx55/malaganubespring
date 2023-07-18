@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -252,11 +251,49 @@ public class RestauranteController {
 				 
 			 }
 			 
-		
-			 
 		return responseEntity;
 	} 
 	
+	
+	@PutMapping("/editar-con-foto/{id}")
+	public ResponseEntity<?> modificarRestauranteConFoto (@Valid Restaurante restaurante, BindingResult bindingResult, MultipartFile archivo,@PathVariable Long id) throws IOException
+	{
+		ResponseEntity<?> responseEntity = null;
+		Optional<Restaurante> opRest = null;
+			
+			 if (bindingResult.hasErrors())
+			 {
+				 logger.debug("ERRORES en PUT");
+				 responseEntity = generarRespuestaErroresValdicacion(bindingResult);
+					
+			 } else {
+				 logger.debug("SIN ERRORES en PUT");
+				 
+				 if (!archivo.isEmpty())
+				 {
+					 try {
+						restaurante.setFoto(archivo.getBytes());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						logger.error("Error al tratar la foto ", e);
+						throw e;
+					}
+				 }
+				 
+				 opRest = this.restauranteService.modificarRestaurante(id, restaurante);
+				 if (opRest.isPresent())
+				 {
+					 Restaurante rm =  opRest.get();
+					 responseEntity = ResponseEntity.ok(rm);
+				 } else {
+					 responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+				 }
+				 
+			 }
+			 
+		return responseEntity;
+	} 
 	
 	
 	//* DELETE -> Borrar un resutaurante (por ID) http://localhost:8081/restaurante/3
@@ -281,6 +318,22 @@ public class RestauranteController {
 		Iterable<Restaurante> lista_Restaurantes = null;
 			
 			lista_Restaurantes = this.restauranteService.buscarPorRangoPrecio(preciomin, preciomax);
+			responseEntity = ResponseEntity.ok(lista_Restaurantes);
+		
+		return responseEntity;
+	}
+	
+	//GET http://localhost:8081/restaurante/buscarPorPrecioPaginado?preciomin=10&preciomax=40&page=0&size=3
+	@GetMapping("/buscarPorPrecioPaginado")
+	public ResponseEntity<?> listarPorRangoPrecioPaginado (
+			@RequestParam(name = "preciomin") int preciomin,
+			@RequestParam(name = "preciomax") int preciomax,
+			Pageable pageable)
+	{
+		ResponseEntity<?> responseEntity = null;
+		Iterable<Restaurante> lista_Restaurantes = null;
+			
+			lista_Restaurantes = this.restauranteService.buscarPorRangoPrecio(preciomin, preciomax, pageable);
 			responseEntity = ResponseEntity.ok(lista_Restaurantes);
 		
 		return responseEntity;
