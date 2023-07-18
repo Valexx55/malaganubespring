@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import edu.arelance.nube.repository.entity.Restaurante;
 
 @Repository
-public interface RestauranteRepository extends CrudRepository<Restaurante, Long> {
+//public interface RestauranteRepository extends CrudRepository<Restaurante, Long> {
+public interface RestauranteRepository extends PagingAndSortingRepository<Restaurante, Long> {
 
 	//1 KEY WORD QUERIES - Consultas por palabras clave
 	//obtener restaurantes en un rango de precio

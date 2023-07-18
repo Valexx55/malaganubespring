@@ -2,10 +2,14 @@ package edu.arelance.nube.service;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import edu.arelance.nube.dto.FraseChuckNorris;
 import edu.arelance.nube.repository.entity.Restaurante;
 
 public interface RestauranteService {
+	
+	Page<Restaurante> consultarPorPagina (Pageable pageable);
 	
 	Iterable<Restaurante> consultarTodos ();
 	
@@ -24,4 +28,10 @@ public interface RestauranteService {
 	Iterable<String> obtenerTodosLosBarrios();
 	
 	Optional<FraseChuckNorris> obtenerFraseAleatorioChuckNorris ();
+	
+
+	
+	
+	
+	
 }

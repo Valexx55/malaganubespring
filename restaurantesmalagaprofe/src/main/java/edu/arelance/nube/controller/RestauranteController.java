@@ -11,7 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -193,6 +197,32 @@ public class RestauranteController {
 	}
 	
 	
+	@GetMapping("/obtenerFoto/{id}") //GET localhost:8081/restaurante/obtenerFoto/8
+	public ResponseEntity<?> obtenerFotoRestaurante (@PathVariable Long id)
+	{
+		ResponseEntity<?> responseEntity = null;
+		Optional<Restaurante> or = null;
+		Resource imagen = null;//esto representa el archivo
+		
+			logger.debug("En obtenerFotoRestaurante " +id);
+			or = this.restauranteService.consultarRestaurante(id);
+			if (or.isPresent()&&or.get().getFoto()!=null)
+			{ //la consulta ha recuperado un registro
+				
+				Restaurante restauranteLeido =  or.get();
+				imagen = new ByteArrayResource(restauranteLeido.getFoto());
+				responseEntity = ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imagen);
+				logger.debug("Recuperado foto del registro " + restauranteLeido);
+				
+			}else {
+				////la consulta NO ha recuperado un registro
+				responseEntity = ResponseEntity.noContent().build();
+				logger.debug("El restaurante con " + id + " no existe o no tiene foto");
+			}
+			logger.debug("Saliendo de obtenerFotoRestaurante ");
+		
+		return responseEntity;
+	}
 	
 	
 	
@@ -305,6 +335,20 @@ public class RestauranteController {
 		
 	}
 	
+    
+    @GetMapping("/pagina") //GET http://localhost:8081/restaurante/pagina?page=0&size=2
+	public ResponseEntity<?> obtenerResturantesPorPagina (Pageable pageable)
+	{
+		ResponseEntity<?> responseEntity = null;
+		Iterable<Restaurante> pagina_Restaurantes = null;
+		
+			pagina_Restaurantes = this.restauranteService.consultarPorPagina(pageable);
+			responseEntity = ResponseEntity.ok(pagina_Restaurantes);
+		
+		return responseEntity;
+	}
+    
+    
 }
 
 

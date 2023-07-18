@@ -57,7 +57,7 @@ public class Restaurante {
 	@Column(name = "creado_en")
 	private LocalDateTime creadoEn;
 	
-	@Lob
+	@Lob //Binary Large Object 
 	@JsonIgnore //no queremos que este atributo vaya en el JSON de respuesta
 	private byte[] foto;
 	
