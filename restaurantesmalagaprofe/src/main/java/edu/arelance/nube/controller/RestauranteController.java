@@ -1,5 +1,6 @@
 package edu.arelance.nube.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+//import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import edu.arelance.nube.dto.FraseChuckNorris;
 import edu.arelance.nube.repository.entity.Restaurante;
@@ -152,6 +155,47 @@ public class RestauranteController {
 			
 		return responseEntity;
 	}
+	
+	@PostMapping("/crear-con-foto") //POST localhost:8081/restaurante/crear-con-foto
+	public ResponseEntity<?> insertarRestauranteConFoto (@Valid Restaurante restaurante, BindingResult bindingResult, MultipartFile archivo) throws IOException
+	{
+		ResponseEntity<?> responseEntity = null;
+		Restaurante restauranteNuevo = null;
+		
+			//TODO validar
+			if (bindingResult.hasErrors()) {
+				logger.debug("Errores en la entrada POST");
+				responseEntity = generarRespuestaErroresValdicacion(bindingResult);
+				
+			}else {
+				logger.debug("SIN Errores en la entrada POST");
+				
+				if (!archivo.isEmpty())
+				{
+					logger.debug("El restaurante trae foto");
+					try {
+						restaurante.setFoto(archivo.getBytes());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						logger.error("Error al tratar la foto", e);
+						throw e;
+					}
+				}
+				
+				restauranteNuevo = this.restauranteService.altaRestaurante(restaurante);
+				responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(restauranteNuevo);
+			
+				
+			}
+			
+		return responseEntity;
+	}
+	
+	
+	
+	
+	
 	
 	//* PUT -> Modificar un restaurante que ya existe http://localhost:8081/restaurante/id (Body Restaurante)
 	@PutMapping("/{id}")

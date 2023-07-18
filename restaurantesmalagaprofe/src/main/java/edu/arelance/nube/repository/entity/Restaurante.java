@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -15,6 +16,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.lang.NonNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "restaurantes" )
@@ -53,6 +56,22 @@ public class Restaurante {
 	
 	@Column(name = "creado_en")
 	private LocalDateTime creadoEn;
+	
+	@Lob
+	@JsonIgnore //no queremos que este atributo vaya en el JSON de respuesta
+	private byte[] foto;
+	
+	public Integer getFotoHashCode ()
+	{
+		Integer idev = null;
+		
+			if (this.foto!=null)
+			{
+				idev = this.foto.hashCode();
+			}
+		
+		return idev;
+	}
 	
 	@PrePersist//este método, marcado así, se ejecuta antes de insertar el restaurante nuevo
 	private void generarFechaCreacion ()
@@ -194,6 +213,15 @@ public class Restaurante {
 				+ ", precio=" + precio + ", especialidad1=" + especialidad1 + ", especialidad2=" + especialidad2
 				+ ", especialidad3=" + especialidad3 + ", creadoEn=" + creadoEn + "]";
 	}
+
+	public byte[] getFoto() {
+		return foto;
+	}
+
+	public void setFoto(byte[] foto) {
+		this.foto = foto;
+	}
+	
 	
 	
 }
