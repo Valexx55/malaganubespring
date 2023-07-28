@@ -55,7 +55,7 @@ public class Restaurante {
 	private String especialidad3;
 	
 	@Column(name = "creado_en")
-	private LocalDateTime creadoEn;
+	public LocalDateTime creadoEn;
 	
 	@Lob //Binary Large Object 
 	@JsonIgnore //no queremos que este atributo vaya en el JSON de respuesta
